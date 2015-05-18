@@ -14,6 +14,7 @@
 //
 
 #import "GRListingRequest.h"
+#import "GRResource.h"
 
 @interface GRListingRequest ()
 
@@ -102,7 +103,9 @@
                 parsedBytes = CFFTPCreateParsedResourceListing(NULL, &bytes[offset], totalbytes - offset, &listingEntity);
                 if (parsedBytes > 0) {
                     if (listingEntity != NULL) {
-                        self.filesInfo = [self.filesInfo arrayByAddingObject:(__bridge_transfer NSDictionary *)listingEntity];
+                        GRResource *resource = [[GRResource alloc] initWithResourceDictionary:
+                                                (__bridge_transfer NSDictionary *)listingEntity];
+                        self.filesInfo = [self.filesInfo arrayByAddingObject:resource];
                     }
                     offset += parsedBytes;
                 }

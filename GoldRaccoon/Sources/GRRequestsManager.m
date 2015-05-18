@@ -146,14 +146,10 @@
 {
     // listing request
     if ([request isKindOfClass:[GRListingRequest class]]) {
-        NSMutableArray *listing = [NSMutableArray array];
-        for (NSDictionary *file in ((GRListingRequest *)request).filesInfo) {
-            [listing addObject:[file objectForKey:(id)kCFFTPResourceName]];
-        }
         if ([self.delegate respondsToSelector:@selector(requestsManager:didCompleteListingRequest:listing:)]) {
             [self.delegate requestsManager:self
                  didCompleteListingRequest:((GRListingRequest *)request)
-                                   listing:listing];
+                                   listing:((GRListingRequest *)request).filesInfo];
         }
     }
     
