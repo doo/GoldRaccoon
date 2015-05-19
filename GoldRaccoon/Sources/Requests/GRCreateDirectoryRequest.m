@@ -99,6 +99,13 @@
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent
 {
+    [super stream:theStream handleEvent:streamEvent];
+    
+    // see if we have cancelled the runloop
+    if ([self.streamInfo checkCancelRequest:self]) {
+        return;
+    }
+    
     switch (streamEvent) {
         // XCode whines about this missing - which is why it is here
         case NSStreamEventNone:
