@@ -33,6 +33,8 @@
 @property (nonatomic, readonly) long totalBytesSent;            // will have bytes total sent
 @property (nonatomic, assign) BOOL didOpenStream;               // whether the stream opened or not
 @property (nonatomic, assign) BOOL cancelDoesNotCallDelegate;   // cancel closes stream without calling delegate
+/** The queue for input/output streams. Default is the main queue. */
+@property (nonatomic, strong) dispatch_queue_t queue;
 
 - (instancetype)initWithDelegate:(id<GRRequestDelegate>)aDelegate datasource:(id<GRRequestDataSource>)aDatasource;
 

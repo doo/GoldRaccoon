@@ -28,6 +28,8 @@
 @property (nonatomic, assign) BOOL delegateRespondsToPercentProgress;
 @property (nonatomic, assign) BOOL isRunning;
 
+@property (nonatomic, strong) dispatch_queue_t streamQueue;
+
 - (id<GRRequestProtocol>)_addRequestOfType:(Class)clazz withPath:(NSString *)filePath;
 - (id<GRDataExchangeRequestProtocol>)_addDataExchangeRequestOfType:(Class)clazz withLocalPath:(NSString *)localPath remotePath:(NSString *)remotePath;
 - (void)_enqueueRequest:(id<GRRequestProtocol>)request;
@@ -60,6 +62,7 @@
         _requestQueue = [[GRQueue alloc] init];
         _isRunning = NO;
         _delegateRespondsToPercentProgress = NO;
+        _streamQueue = dispatch_queue_create("net.goldenraccoon.streamqueue", NULL);
     }
     return self;
 }
@@ -268,6 +271,7 @@
     id<GRRequestProtocol> request = [[clazz alloc] initWithDelegate:self datasource:self];
     request.path = filePath;
     
+    [request setQueue:self.streamQueue];
     [self _enqueueRequest:request];
     return request;
 }
@@ -277,7 +281,7 @@
     id<GRDataExchangeRequestProtocol> request = [[clazz alloc] initWithDelegate:self datasource:self];
     request.path = remotePath;
     request.localFilePath = localPath;
-    
+    [request setQueue:self.streamQueue];
     [self _enqueueRequest:request];
     return request;
 }
@@ -309,9 +313,7 @@
         _currentUploadData = [NSData dataWithContentsOfFile:localFilepath];
     }
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.currentRequest start];
-    });
+    [self.currentRequest start];
     
     if ([self.delegate respondsToSelector:@selector(requestsManager:didScheduleRequest:)]) {
         [self.delegate requestsManager:self didScheduleRequest:self.currentRequest];

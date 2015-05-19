@@ -31,6 +31,9 @@
 @property (nonatomic, assign) float maximumSize;
 @property (nonatomic, assign) float percentCompleted;
 
+/** The queue for input/output streams. Default is the main queue. */
+@property (nonatomic, strong) dispatch_queue_t queue;
+
 - (NSURL *)fullURL;
 - (NSURL *)fullURLWithEscape;
 - (void)start;

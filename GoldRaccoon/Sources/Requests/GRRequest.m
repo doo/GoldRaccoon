@@ -37,6 +37,7 @@
         _streamInfo = [[GRStreamInfo alloc] init];
         _delegate = aDelegate;
         _dataSource = aDatasource;
+        _queue = dispatch_get_main_queue();
     }
     return self;
 }

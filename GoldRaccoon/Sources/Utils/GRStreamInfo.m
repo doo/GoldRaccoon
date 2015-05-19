@@ -58,6 +58,8 @@
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPFetchResourceInfo, kCFBooleanTrue);
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPUserName, (__bridge CFStringRef) [request.dataSource usernameForRequest:request]);
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPPassword, (__bridge CFStringRef) [request.dataSource passwordForRequest:request]);
+    dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
+    CFReadStreamSetDispatchQueue(readStreamRef, queue);
     self.readStream = ( __bridge_transfer NSInputStream *) readStreamRef;
     
     if (self.readStream == nil) {
@@ -104,6 +106,8 @@
     CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertyFTPUserName, (__bridge CFStringRef) [request.dataSource usernameForRequest:request]);
     CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertyFTPPassword, (__bridge CFStringRef) [request.dataSource passwordForRequest:request]);
     
+    dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
+    CFWriteStreamSetDispatchQueue(writeStreamRef, queue);
     self.writeStream = ( __bridge_transfer NSOutputStream *) writeStreamRef;
     
     if (!self.writeStream) {
