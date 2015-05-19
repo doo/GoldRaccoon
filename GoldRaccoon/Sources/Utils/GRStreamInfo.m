@@ -58,8 +58,18 @@
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPFetchResourceInfo, kCFBooleanTrue);
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPUserName, (__bridge CFStringRef) [request.dataSource usernameForRequest:request]);
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPPassword, (__bridge CFStringRef) [request.dataSource passwordForRequest:request]);
+    
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFReadStreamSetDispatchQueue(readStreamRef, queue);
+    
+    if (request.serverTrustDelegate != nil) {
+        /** We validate certificate chain manually
+         and ask user whether he want to trust certificat if we fail to validate it. */
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain: (id)kCFBooleanFalse};
+        CFReadStreamSetProperty(readStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
+    }
+
+    
     self.readStream = ( __bridge_transfer NSInputStream *) readStreamRef;
     
     if (self.readStream == nil) {
@@ -108,6 +118,14 @@
     
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFWriteStreamSetDispatchQueue(writeStreamRef, queue);
+    
+    if (request.serverTrustDelegate != nil) {
+        /** We validate certificate chain manually 
+        and ask user whether he want to trust certificat if we fail to validate it. */
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain: (id)kCFBooleanFalse};
+        CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
+    }
+    
     self.writeStream = ( __bridge_transfer NSOutputStream *) writeStreamRef;
     
     if (!self.writeStream) {
@@ -119,7 +137,6 @@
     }
     
     self.writeStream.delegate = request;
-    [self.writeStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     [self.writeStream open];
     
     request.didOpenStream = NO;

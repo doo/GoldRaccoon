@@ -17,7 +17,7 @@
 
 #import "GRQueue.h"
 
-@interface GRRequestsManager () <GRRequestDelegate, GRRequestDataSource>
+@interface GRRequestsManager () <GRRequestDelegate, GRRequestDataSource, GRRequesSSLServerTrustDelegate>
 
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
@@ -215,6 +215,7 @@
     [self _processNextRequest];
 }
 
+
 #pragma mark - GRRequestDelegate optional
 
 - (void)percentCompleted:(float)percent forRequest:(id<GRRequestProtocol>)request
@@ -233,6 +234,18 @@
 {
     // called only with GRUploadRequest requests
     return YES;
+}
+
+#pragma mark - GRRequestSSLTrustDelegate
+
+- (void)request:(id<GRRequestProtocol>)request
+didReceiveSSLServerTrust:(SecTrustRef)serverTrust
+completionHandler:(void (^)(BOOL))completionHandler {
+    if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
+        [self.delegate requestsManager:self
+         shouldContinueWithServerTrust:serverTrust
+                     completionHandler:completionHandler];
+    }
 }
 
 #pragma mark - GRRequestDataSource
@@ -270,8 +283,11 @@
 {
     id<GRRequestProtocol> request = [[clazz alloc] initWithDelegate:self datasource:self];
     request.path = filePath;
-    
     [request setQueue:self.streamQueue];
+    [request setImplicitTLS:self.implicitTLS];
+    if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
+        [request setServerTrustDelegate:self];
+    }
     [self _enqueueRequest:request];
     return request;
 }
@@ -282,6 +298,9 @@
     request.path = remotePath;
     request.localFilePath = localPath;
     [request setQueue:self.streamQueue];
+    if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
+        [request setServerTrustDelegate:self];
+    }
     [self _enqueueRequest:request];
     return request;
 }

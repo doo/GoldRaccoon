@@ -71,6 +71,15 @@
 - (void)requestsManager:(id<GRRequestsManagerProtocol>)requestsManager didCompleteDownloadRequest:(id<GRDataExchangeRequestProtocol>)request;
 
 /**
+ @brief Called to ask delegeta whether we should trust given server trust or not.
+ If it's not implemented the default evaluation will be performed.
+ */
+- (void)requestsManager:(id<GRRequestsManagerProtocol>)requestsManager
+    shouldContinueWithServerTrust:(SecTrustRef)serverTrust
+                completionHandler:(void (^)(BOOL trust))completionHandler;
+
+
+/**
  @brief Called to notify the delegate that a given download request failed writing the file locally.
  @param requestsManager The requests manager.
  @param path The local path that fail writing to.

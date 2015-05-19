@@ -27,15 +27,27 @@
 }
 
 @property (nonatomic, weak) id <GRRequestDelegate> delegate;
+
+/** If set, the delegate is be responsible for validating SSL server trust. Should be set before starting request. */
+@property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
+
 @property (nonatomic, weak) id <GRRequestDataSource> dataSource;
 
 @property (nonatomic, readonly) long bytesSent;                 // will have bytes from the last FTP call
 @property (nonatomic, readonly) long totalBytesSent;            // will have bytes total sent
 @property (nonatomic, assign) BOOL didOpenStream;               // whether the stream opened or not
 @property (nonatomic, assign) BOOL cancelDoesNotCallDelegate;   // cancel closes stream without calling delegate
+@property (nonatomic, assign) BOOL implicitTLS;
+
 /** The queue for input/output streams. Default is the main queue. */
 @property (nonatomic, strong) dispatch_queue_t queue;
 
 - (instancetype)initWithDelegate:(id<GRRequestDelegate>)aDelegate datasource:(id<GRRequestDataSource>)aDatasource;
+
+/** 
+ Implements custem SSL trust validation.
+ Can close the stream, if certificate is not trusted by 'serverTrustDelegate'. Subclasses must call super. 
+ */
+- (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent  __attribute__((objc_requires_super));
 
 @end

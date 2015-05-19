@@ -19,6 +19,8 @@
 @class GRError;
 @class GRStreamInfo;
 
+@protocol GRRequesSSLServerTrustDelegate;
+
 @protocol GRRequestProtocol <NSObject>
 
 @property (nonatomic, assign) BOOL passiveMode;
@@ -30,6 +32,11 @@
 
 @property (nonatomic, assign) float maximumSize;
 @property (nonatomic, assign) float percentCompleted;
+
+@property (nonatomic, assign) BOOL implicitTLS;
+
+/** If set, the delegate is be responsible for validating SSL server trust. Should be set before starting request. */
+@property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
 
 /** The queue for input/output streams. Default is the main queue. */
 @property (nonatomic, strong) dispatch_queue_t queue;
@@ -58,6 +65,14 @@
 - (void)percentCompleted:(float)percent forRequest:(id<GRRequestProtocol>)request;
 - (void)dataAvailable:(NSData *)data forRequest:(id<GRDataExchangeRequestProtocol>)request;
 - (BOOL)shouldOverwriteFile:(NSString *)filePath forRequest:(id<GRDataExchangeRequestProtocol>)request;
+
+@end
+
+@protocol GRRequesSSLServerTrustDelegate <NSObject>
+@required
+- (void)request:(id<GRRequestProtocol>)request
+    didReceiveSSLServerTrust:(SecTrustRef)serverTrust
+    completionHandler:(void (^)(BOOL trust))completionHandler;
 
 @end
 

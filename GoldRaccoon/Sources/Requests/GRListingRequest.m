@@ -62,8 +62,14 @@
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent
 {
-    NSData *data;
+    [super stream:theStream handleEvent:streamEvent];
     
+    // see if we have cancelled the runloop
+    if ([self.streamInfo checkCancelRequest:self]) {
+        return;
+    }
+    
+    NSData *data;
     switch (streamEvent) {
         case NSStreamEventOpenCompleted: {
 			self.filesInfo = [NSMutableArray array];

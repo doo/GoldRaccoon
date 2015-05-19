@@ -15,6 +15,9 @@
 
 #import "GRRequest.h"
 
+/** The key to mark stream`s SSL certificate as validated. */
+NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
+
 @implementation GRRequest
 
 @synthesize passiveMode = _passiveMode;
@@ -32,6 +35,7 @@
     self = [super init];
     if (self) {
 		_passiveMode = YES;
+        _implicitTLS = NO;
         _uuid = [[NSUUID UUID] UUIDString];
         _path = nil;
         _streamInfo = [[GRStreamInfo alloc] init];
@@ -156,6 +160,40 @@
 - (void)setCancelDoesNotCallDelegate:(BOOL)cancelDoesNotCallDelegate
 {
     self.streamInfo.cancelDoesNotCallDelegate = cancelDoesNotCallDelegate;
+}
+
+- (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent {
+    
+    if (self.serverTrustDelegate != nil &&
+        (streamEvent == NSStreamEventHasBytesAvailable || streamEvent == NSStreamEventHasSpaceAvailable)) {
+        /* Check it. */
+        SecTrustRef trust = (__bridge SecTrustRef)[theStream propertyForKey:
+                                                   (__bridge NSString *)kCFStreamPropertySSLPeerTrust];
+        if (trust != NULL) {
+            NSNumber *alreadyValidated = [theStream propertyForKey: kCertificateAlreadyValidated];
+            BOOL validated = (alreadyValidated != nil && [alreadyValidated boolValue]);
+            __block BOOL trusted = YES;
+            dispatch_group_t dispatchGroup = dispatch_group_create();
+            if (!validated) {
+                if (self.serverTrustDelegate != nil) {
+                    dispatch_group_enter(dispatchGroup);
+                    [self.serverTrustDelegate request:self
+                             didReceiveSSLServerTrust:trust
+                                    completionHandler:^(BOOL shouldTrust) {
+                                        trusted = shouldTrust;
+                                        dispatch_group_leave(dispatchGroup);
+                    }];
+                }
+                [theStream setProperty:@(YES) forKey:kCertificateAlreadyValidated];
+            }
+            dispatch_group_wait(dispatchGroup, DISPATCH_TIME_FOREVER);
+            if (!trusted) {
+                [self cancelRequest];
+                [theStream setDelegate: nil];
+                [theStream close];
+            }
+        }
+    }
 }
 
 @end
