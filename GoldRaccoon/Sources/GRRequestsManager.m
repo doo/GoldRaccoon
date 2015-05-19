@@ -197,14 +197,15 @@
         }
         _currentDownloadData = nil;
     }
-    
     [self _processNextRequest];
 }
 
 - (void)requestFailed:(GRRequest *)request
 {
     if ([self.delegate respondsToSelector:@selector(requestsManager:didFailRequest:withError:)]) {
-        NSError *error = [NSError errorWithDomain:@"com.albertodebortoli.goldraccoon" code:-1000 userInfo:@{@"message": request.error.message}];
+        NSError *error = [NSError errorWithDomain:GRErrorDomain
+                                             code:request.error.errorCode
+                                         userInfo:@{@"message": request.error.message}];
         [self.delegate requestsManager:self didFailRequest:request withError:error];
     }
     

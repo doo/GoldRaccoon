@@ -14,6 +14,8 @@
 
 #import "GRError.h"
 
+NSString *GRErrorDomain = @"GRErrorDomain";
+
 @implementation GRError
 
 @synthesize errorCode;

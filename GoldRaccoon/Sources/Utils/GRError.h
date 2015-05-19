@@ -12,6 +12,8 @@
 //  Copyright 2013 Alberto De Bortoli. All rights reserved.
 //
 
+extern NSString *GRErrorDomain;
+
 typedef enum GRErrorCodes {
     //client errors
     kGRFTPClientHostnameIsNil = 901,
