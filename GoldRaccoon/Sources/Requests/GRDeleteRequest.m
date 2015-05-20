@@ -34,10 +34,14 @@
     return directoryPath;
 }
 
+// Supppresses the deprication warning for CFURLDestroyResource method.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)start
 {
     SInt32 errorcode;
-    
+
     if ([self.dataSource hostnameForRequest:self] == nil) {
         [self.streamInfo streamError:self errorCode:kGRFTPClientHostnameIsNil];
         return;
@@ -53,5 +57,6 @@
         [self.streamInfo streamError:self errorCode:kGRFTPClientCantDeleteFileOrDirectory];
     }
 }
+#pragma GCC diagnostic pop
 
 @end
