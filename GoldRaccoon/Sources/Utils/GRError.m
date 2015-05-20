@@ -53,7 +53,7 @@ NSString *GRErrorDomain = @"GRErrorDomain";
 }
 
 + (NSString *)messageForErrorCode:(GRErrorCodes)code {
-    NSString *errorMessage = @"";
+    NSString *errorMessage = nil;
     switch (code) {
             // Client errors
         case kGRFTPClientSentDataIsNil:
@@ -127,10 +127,6 @@ NSString *GRErrorDomain = @"GRErrorDomain";
             
         case kGRFTPServerUnknownError:
             errorMessage = @"Unknown FTP error!";
-            break;
-            
-        default:
-            errorMessage = @"Unknown error!";
             break;
     }
     
