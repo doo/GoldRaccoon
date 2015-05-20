@@ -39,8 +39,7 @@
 - (void)start
 {
     if ([self hostnameForRequest:self] == nil) {
-        self.error = [[GRError alloc] init];
-        self.error.errorCode = kGRFTPClientHostnameIsNil;
+        self.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
         [self.delegate requestFailed:self];
         return;
     }
@@ -58,7 +57,8 @@
     NSString *directoryName = [[self.path lastPathComponent] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
 
     if ([self.listrequest fileExists:directoryName]) {
-        [self.streamInfo streamError:self errorCode:kGRFTPClientCantOverwriteDirectory];
+        NSError *error = [GRError errorWithCode:kGRFTPClientCantOverwriteDirectory];
+        [self.streamInfo streamError:self error:error];
     }
     else {
         // open the write stream and check for errors calling delegate methods
@@ -121,7 +121,7 @@
 
         case NSStreamEventErrorOccurred: {
             // perform callbacks and close out streams
-            [self.streamInfo streamError:self errorCode:[GRError errorCodeWithError:[theStream streamError]]];
+            [self.streamInfo streamError:self error:[theStream streamError]];
             break;
         }
             

@@ -34,7 +34,7 @@
 - (BOOL)checkCancelRequest:(id<GRRequestProtocol>)request;
 - (NSData *)read:(id<GRRequestProtocol>)request;
 - (BOOL)write:(id<GRRequestProtocol>)request data:(NSData *)data;
-- (void)streamError:(id<GRRequestProtocol>)request errorCode:(enum GRErrorCodes)errorCode;
+- (void)streamError:(id<GRRequestProtocol>)request error:(NSError *)error;
 - (void)streamComplete:(id<GRRequestProtocol>)request;
 - (void)close:(id<GRRequestProtocol>)request;
 

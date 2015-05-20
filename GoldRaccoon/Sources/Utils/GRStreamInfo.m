@@ -40,8 +40,7 @@
 - (void)openRead:(GRRequest *)request
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
-        request.error = [[GRError alloc] init];
-        request.error.errorCode = kGRFTPClientHostnameIsNil;
+        request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
         [request.delegate requestFailed:request];
         [request.streamInfo close:request];
         return;
@@ -73,8 +72,7 @@
     self.readStream = ( __bridge_transfer NSInputStream *) readStreamRef;
     
     if (self.readStream == nil) {
-        request.error = [[GRError alloc] init];
-        request.error.errorCode = kGRFTPClientCantOpenStream;
+        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
         [request.delegate requestFailed:request];
         [request.streamInfo close:request];
         return;
@@ -87,8 +85,7 @@
     request.didOpenStream = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), _queue, ^{
         if (!request.didOpenStream && request.error == nil) {
-            request.error = [[GRError alloc] init];
-            request.error.errorCode = kGRFTPClientStreamTimedOut;
+            request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
             [request.delegate requestFailed:request];
             [request.streamInfo close:request];
         }
@@ -98,8 +95,7 @@
 - (void)openWrite:(GRRequest *)request
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
-        request.error = [[GRError alloc] init];
-        request.error.errorCode = kGRFTPClientHostnameIsNil;
+        request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
         [request.delegate requestFailed:request];
         [request.streamInfo close:request];
         return;
@@ -129,8 +125,7 @@
     self.writeStream = ( __bridge_transfer NSOutputStream *) writeStreamRef;
     
     if (!self.writeStream) {
-        request.error = [[GRError alloc] init];
-        request.error.errorCode = kGRFTPClientCantOpenStream;
+        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
         [request.delegate requestFailed:request];
         [request.streamInfo close:request];
         return;
@@ -142,8 +137,7 @@
     request.didOpenStream = NO;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), _queue, ^{
         if (!request.didOpenStream && (request.error == nil)) {
-            request.error = [[GRError alloc] init];
-            request.error.errorCode = kGRFTPClientStreamTimedOut;
+            request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
             [request.delegate requestFailed:request];
             [request.streamInfo close:request];
         }
@@ -192,7 +186,8 @@
     }
     
     // otherwise we had an error, return an error
-    [self streamError:request errorCode:kGRFTPClientCantReadStream];
+    NSError *error = [GRError errorWithCode:kGRFTPClientCantReadStream];
+    [self streamError:request error:error];
     
     return nil;
 }
@@ -214,16 +209,15 @@
     if (self.bytesThisIteration == 0) {
         return YES;
     }
-    
-    [self streamError:request errorCode:kGRFTPClientCantWriteStream]; // perform callbacks and close out streams
+    NSError *error = [GRError errorWithCode:kGRFTPClientCantReadStream];
+    [self streamError:request error:error]; // perform callbacks and close out streams
 
     return NO;
 }
 
-- (void)streamError:(GRRequest *)request errorCode:(enum GRErrorCodes)errorCode
+- (void)streamError:(GRRequest *)request error:(NSError *)error
 {
-    request.error = [[GRError alloc] init];
-    request.error.errorCode = errorCode;
+    request.error = [GRError proccessError:error];
     [request.delegate requestFailed:request];
     [request.streamInfo close:request];
 }

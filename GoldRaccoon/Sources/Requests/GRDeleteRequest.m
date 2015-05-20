@@ -43,7 +43,8 @@
     SInt32 errorcode;
 
     if ([self.dataSource hostnameForRequest:self] == nil) {
-        [self.streamInfo streamError:self errorCode:kGRFTPClientHostnameIsNil];
+        NSError *error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
+        [self.streamInfo streamError:self error:error];
         return;
     }
     
@@ -53,8 +54,9 @@
     }
     
     else {
-        // unsuccessful        
-        [self.streamInfo streamError:self errorCode:kGRFTPClientCantDeleteFileOrDirectory];
+        // unsuccessful
+        NSError *error = [GRError errorWithCode:kGRFTPClientCantDeleteFileOrDirectory];
+        [self.streamInfo streamError:self error:error];
     }
 }
 #pragma GCC diagnostic pop

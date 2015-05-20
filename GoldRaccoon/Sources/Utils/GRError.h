@@ -42,9 +42,10 @@ typedef enum GRErrorCodes {
 
 @interface GRError : NSObject
 
-@property (assign) GRErrorCodes errorCode;
-@property (readonly) NSString *message;
+/** If error contains known `kCFFTPStatusCodeKey` error code, 
+ it returns new error object with custom description for error. */
++ (NSError *)proccessError:(NSError *)error;
 
-+ (GRErrorCodes)errorCodeWithError:(NSError *)error;
++ (NSError *)errorWithCode:(GRErrorCodes)code;
 
 @end

@@ -206,9 +206,7 @@
 - (void)requestFailed:(GRRequest *)request
 {
     if ([self.delegate respondsToSelector:@selector(requestsManager:didFailRequest:withError:)]) {
-        NSError *error = [NSError errorWithDomain:GRErrorDomain
-                                             code:request.error.errorCode
-                                         userInfo:@{@"message": request.error.message}];
+        NSError *error = request.error;
         [self.delegate requestsManager:self didFailRequest:request withError:error];
     }
     

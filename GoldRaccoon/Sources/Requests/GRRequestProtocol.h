@@ -27,7 +27,7 @@
 @property (nonatomic, copy) NSString *uuid;
 
 @property (nonatomic, copy) NSString *path;
-@property (nonatomic, strong) GRError *error;
+@property (nonatomic, strong) NSError *error;
 @property (nonatomic, strong) GRStreamInfo *streamInfo;
 
 @property (nonatomic, assign) float maximumSize;

@@ -18,26 +18,44 @@ NSString *GRErrorDomain = @"GRErrorDomain";
 
 @implementation GRError
 
-@synthesize errorCode;
-
 + (GRErrorCodes)errorCodeWithError:(NSError *)error
 {
     // As suggested by RMaddy
-    NSDictionary *userInfo = error.userInfo;
-    NSNumber *code = [userInfo objectForKey:(id)kCFFTPStatusCodeKey];
-    
+    NSNumber *code = [error.userInfo objectForKey:(id)kCFFTPStatusCodeKey];
     if (code) {
         return [code intValue];
     }
-    
     return 0;
 }
 
-- (NSString *)message
++ (NSError *)proccessError:(NSError *)error
 {
-    NSString *errorMessage;
-    switch (self.errorCode) {
-        // Client errors
+    // As suggested by RMaddy
+    NSNumber *code = [error.userInfo objectForKey:(id)kCFFTPStatusCodeKey];
+    if (code != nil) {
+        NSMutableDictionary *userInfo = [error.userInfo mutableCopy];
+        if (userInfo == nil) {
+            userInfo = [[NSMutableDictionary alloc] init];
+        }
+        NSString *message = [self messageForErrorCode:(GRErrorCodes)code];
+        if (message != nil) {
+            userInfo[NSLocalizedDescriptionKey] = [self messageForErrorCode:(GRErrorCodes)code];
+        }
+        return [NSError errorWithDomain:error.domain code:error.code userInfo:userInfo];
+    }
+    return error;
+}
+
++ (NSError *)errorWithCode:(GRErrorCodes)code {
+   return [NSError errorWithDomain:GRErrorDomain
+                              code:code
+                          userInfo:@{NSLocalizedDescriptionKey:[self messageForErrorCode:code]}];
+}
+
++ (NSString *)messageForErrorCode:(GRErrorCodes)code {
+    NSString *errorMessage = @"";
+    switch (code) {
+            // Client errors
         case kGRFTPClientSentDataIsNil:
             errorMessage = @"Data is nil.";
             break;
@@ -78,7 +96,7 @@ NSString *GRErrorDomain = @"GRErrorDomain";
             errorMessage = @"Delegate missing dataAvailable:forRequest:";
             break;
             
-        // Server errors    
+            // Server errors
         case kGRFTPServerAbortedTransfer:
             errorMessage = @"Server aborted transfer.";
             break;
@@ -118,5 +136,6 @@ NSString *GRErrorDomain = @"GRErrorDomain";
     
     return errorMessage;
 }
+
 
 @end

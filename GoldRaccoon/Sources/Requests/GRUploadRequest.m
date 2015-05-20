@@ -37,7 +37,8 @@
     self.bytesRemaining = 0;
     
     if ([self.dataSource respondsToSelector:@selector(dataForUploadRequest:)] == NO) {
-        [self.streamInfo streamError:self errorCode:kGRFTPClientMissingRequestDataAvailable];
+        NSError *error = [GRError errorWithCode:kGRFTPClientMissingRequestDataAvailable];
+        [self.streamInfo streamError:self error:error];
         return;
     }
     
@@ -57,7 +58,8 @@
     if ([self.listingRequest fileExists:fileName]) {
         if ([self.delegate shouldOverwriteFile:self.path forRequest:self] == NO) {
             // perform callbacks and close out streams
-            [self.streamInfo streamError:self errorCode:kGRFTPClientFileAlreadyExists];
+            NSError *error = [GRError errorWithCode:kGRFTPClientFileAlreadyExists];
+            [self.streamInfo streamError:self error:error];
             return;
         }
     }
@@ -150,13 +152,14 @@
             
         case NSStreamEventErrorOccurred: {
             // perform callbacks and close out streams
-            [self.streamInfo streamError:self errorCode:[GRError errorCodeWithError:[theStream streamError]]];
+            [self.streamInfo streamError:self error:[theStream streamError]];
             break;
         }
             
         case NSStreamEventEndEncountered: {
             // perform callbacks and close out streams
-            [self.streamInfo streamError:self errorCode:kGRFTPServerAbortedTransfer];
+            NSError *error = [GRError errorWithCode:kGRFTPServerAbortedTransfer];
+            [self.streamInfo streamError:self error:error];
             break;
         }
         

@@ -85,7 +85,8 @@
                 [self.receivedData appendData:data];
             }
             else {
-                [self.streamInfo streamError:self errorCode:kGRFTPClientCantReadStream];
+                NSError *error = [GRError errorWithCode:kGRFTPClientCantReadStream];
+                [self.streamInfo streamError:self error:error];
             }
             break;
         }
@@ -94,7 +95,7 @@
         break;
             
         case NSStreamEventErrorOccurred: {
-            [self.streamInfo streamError:self errorCode:[GRError errorCodeWithError:[theStream streamError]]];
+            [self.streamInfo streamError:self error:[theStream streamError]];
             break;
         }
             
