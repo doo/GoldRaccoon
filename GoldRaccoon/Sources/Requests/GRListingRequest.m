@@ -29,11 +29,11 @@
 
 - (BOOL)fileExists:(NSString *)fileNamePath
 {
-    NSString *fileName = [[fileNamePath lastPathComponent] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    NSString *fileName = [[fileNamePath lastPathComponent] stringByTrimmingCharactersInSet:
+                          [NSCharacterSet characterSetWithCharactersInString:@"/"]];
     
-    for (NSDictionary *file in self.filesInfo) {
-        NSString *name = [file objectForKey:(id)kCFFTPResourceName];
-        if ([fileName isEqualToString:name]) {
+    for (GRResource *resource in self.filesInfo) {
+        if ([fileName isEqualToString:resource.name]) {
             return YES;
         }
     }
@@ -43,7 +43,8 @@
 
 - (NSString *)path
 {
-    // the path will always point to a directory, so we add the final slash to it (if there was one before escaping/standardizing, it's *gone* now)
+    // the path will always point to a directory, so we add the final slash to it
+    // (if there was one before escaping/standardizing, it's *gone* now)
     NSString *directoryPath = [super path];
     if (![directoryPath hasSuffix: @"/"]) {
         directoryPath = [directoryPath stringByAppendingString:@"/"];
