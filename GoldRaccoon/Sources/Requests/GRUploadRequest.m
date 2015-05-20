@@ -16,7 +16,7 @@
 #import "GRUploadRequest.h"
 #import "GRListingRequest.h"
 
-@interface GRUploadRequest () <GRRequestDelegate, GRRequestDataSource>
+@interface GRUploadRequest () <GRRequestDelegate, GRRequestDataSource, GRRequesSSLServerTrustDelegate>
 
 @property (nonatomic, assign) long bytesIndex;
 @property (nonatomic, assign) long bytesRemaining;
@@ -46,6 +46,10 @@
     self.listingRequest = [[GRListingRequest alloc] initWithDelegate:self datasource:self];
 	self.listingRequest.passiveMode = self.passiveMode;
     self.listingRequest.path = [self.path stringByDeletingLastPathComponent];
+    self.listingRequest.queue = self.queue;
+    if (self.serverTrustDelegate != nil) {
+        self.listingRequest.serverTrustDelegate = self;
+    }
     [self.listingRequest start];
 }
 
@@ -53,7 +57,8 @@
 
 - (void)requestCompleted:(GRRequest *)request
 {
-    NSString *fileName = [[self.path lastPathComponent] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    NSString *fileName = [[self.path lastPathComponent] stringByTrimmingCharactersInSet:
+                          [NSCharacterSet characterSetWithCharactersInString:@"/"]];
     
     if ([self.listingRequest fileExists:fileName]) {
         if ([self.delegate shouldOverwriteFile:self.path forRequest:self] == NO) {
@@ -87,17 +92,23 @@
 
 - (NSString *)hostnameForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource hostnameForRequest:request];
+    return [self.dataSource hostnameForRequest:self];
 }
 
 - (NSString *)usernameForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource usernameForRequest:request];
+    return [self.dataSource usernameForRequest:self];
 }
 
 - (NSString *)passwordForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource passwordForRequest:request];
+    return [self.dataSource passwordForRequest:self];
+}
+
+- (void)request:(id<GRRequestProtocol>)request
+didReceiveSSLServerTrust:(SecTrustRef)serverTrust
+completionHandler:(void (^)(BOOL))completionHandler {
+    [self.serverTrustDelegate request:self didReceiveSSLServerTrust:serverTrust completionHandler:completionHandler];
 }
 
 #pragma mark - NSStreamDelegate

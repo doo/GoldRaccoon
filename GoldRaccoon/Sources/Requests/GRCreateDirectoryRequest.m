@@ -16,7 +16,7 @@
 #import "GRCreateDirectoryRequest.h"
 #import "GRListingRequest.h"
 
-@interface GRCreateDirectoryRequest () <GRRequestDelegate, GRRequestDataSource>
+@interface GRCreateDirectoryRequest () <GRRequestDelegate, GRRequestDataSource, GRRequesSSLServerTrustDelegate>
 
 @property GRListingRequest *listrequest;
 
@@ -28,7 +28,8 @@
 
 - (NSString *)path
 {
-    // the path will always point to a directory, so we add the final slash to it (if there was one before escaping/standardizing, it's *gone* now)
+    // the path will always point to a directory, so we add the final slash to it
+    // (if there was one before escaping/standardizing, it's *gone* now)
     NSString *directoryPath = [super path];
     if (![directoryPath hasSuffix: @"/"]) {
         directoryPath = [directoryPath stringByAppendingString:@"/"];
@@ -47,6 +48,10 @@
     // we first list the directory to see if our folder is up already
     self.listrequest = [[GRListingRequest alloc] initWithDelegate:self datasource:self];
     self.listrequest.path = [self.path stringByDeletingLastPathComponent];
+    self.listrequest.queue = self.queue;
+    if (self.serverTrustDelegate != nil) {
+        self.listrequest.serverTrustDelegate = self;
+    }
     [self.listrequest start];
 }
 
@@ -54,7 +59,8 @@
 
 - (void)requestCompleted:(GRRequest *)request
 {
-    NSString *directoryName = [[self.path lastPathComponent] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+    NSString *directoryName = [[self.path lastPathComponent] stringByTrimmingCharactersInSet:
+                               [NSCharacterSet characterSetWithCharactersInString:@"/"]];
 
     if ([self.listrequest fileExists:directoryName]) {
         NSError *error = [GRError errorWithCode:kGRFTPClientCantOverwriteDirectory];
@@ -67,10 +73,17 @@
     }
 }
 
+- (void)request:(id<GRRequestProtocol>)request
+didReceiveSSLServerTrust:(SecTrustRef)serverTrust
+completionHandler:(void (^)(BOOL))completionHandler {
+    [self.serverTrustDelegate request:self didReceiveSSLServerTrust:serverTrust completionHandler:completionHandler];
+}
+
 
 - (void)requestFailed:(GRRequest *)request
 {
-    [self.delegate requestFailed:request];
+    self.error = request.error;
+    [self.delegate requestFailed:self];
 }
 
 - (BOOL)shouldOverwriteFile:(NSString *)filePath forRequest:(id<GRDataExchangeRequestProtocol>)request
@@ -82,17 +95,17 @@
 
 - (NSString *)hostnameForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource hostnameForRequest:request];
+    return [self.dataSource hostnameForRequest:self];
 }
 
 - (NSString *)usernameForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource usernameForRequest:request];
+    return [self.dataSource usernameForRequest:self];
 }
 
 - (NSString *)passwordForRequest:(id<GRRequestProtocol>)request
 {
-    return [self.dataSource passwordForRequest:request];
+    return [self.dataSource passwordForRequest:self];
 }
 
 #pragma mark - NSStreamDelegate
