@@ -61,10 +61,8 @@
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFReadStreamSetDispatchQueue(readStreamRef, queue);
     
-    if (request.serverTrustDelegate != nil && request.implicitSSL) {
-        /** We validate certificate chain manually
-         and ask user whether he want to trust certificat if we fail to validate it. */
-        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain: (id)kCFBooleanFalse};
+    if (request.implicitSSL) {
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(request.serverTrustDelegate == nil)};
         CFReadStreamSetProperty(readStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
     }
 
@@ -115,13 +113,11 @@
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFWriteStreamSetDispatchQueue(writeStreamRef, queue);
     
-    if (request.serverTrustDelegate != nil) {
-        /** We validate certificate chain manually 
-        and ask user whether he want to trust certificat if we fail to validate it. */
-        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain: (id)kCFBooleanFalse};
+    if (request.implicitSSL) {
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(request.serverTrustDelegate == nil)};
         CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
     }
-    
+
     self.writeStream = ( __bridge_transfer NSOutputStream *) writeStreamRef;
     
     if (!self.writeStream) {
