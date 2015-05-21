@@ -37,9 +37,9 @@ NSString *GRErrorDomain = @"GRErrorDomain";
         if (userInfo == nil) {
             userInfo = [[NSMutableDictionary alloc] init];
         }
-        NSString *message = [self messageForErrorCode:(GRErrorCodes)code];
+        NSString *message = [self messageForErrorCode:(GRErrorCodes)code.integerValue];
         if (message != nil) {
-            userInfo[NSLocalizedDescriptionKey] = [self messageForErrorCode:(GRErrorCodes)code];
+            userInfo[NSLocalizedDescriptionKey] = message;
         }
         return [NSError errorWithDomain:error.domain code:error.code userInfo:userInfo];
     }
