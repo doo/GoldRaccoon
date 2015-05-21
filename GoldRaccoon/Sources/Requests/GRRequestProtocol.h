@@ -33,7 +33,7 @@
 @property (nonatomic, assign) float maximumSize;
 @property (nonatomic, assign) float percentCompleted;
 
-@property (nonatomic, assign) BOOL implicitTLS;
+@property (nonatomic, assign) BOOL implicitSSL;
 
 /** If set, the delegate is be responsible for validating SSL server trust. Should be set before starting request. */
 @property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
@@ -70,9 +70,12 @@
 
 @protocol GRRequesSSLServerTrustDelegate <NSObject>
 @required
+
 - (void)request:(id<GRRequestProtocol>)request
     didReceiveSSLServerTrust:(SecTrustRef)serverTrust
     completionHandler:(void (^)(BOOL trust))completionHandler;
+
+
 
 @end
 

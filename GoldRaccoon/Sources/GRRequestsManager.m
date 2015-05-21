@@ -282,7 +282,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     id<GRRequestProtocol> request = [[clazz alloc] initWithDelegate:self datasource:self];
     request.path = filePath;
     [request setQueue:self.streamQueue];
-    [request setImplicitTLS:self.implicitTLS];
+    [request setImplicitSSL:self.implicitSSL];
     if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
         [request setServerTrustDelegate:self];
     }

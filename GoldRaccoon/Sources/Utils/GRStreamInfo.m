@@ -61,7 +61,7 @@
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFReadStreamSetDispatchQueue(readStreamRef, queue);
     
-    if (request.serverTrustDelegate != nil) {
+    if (request.serverTrustDelegate != nil && request.implicitSSL) {
         /** We validate certificate chain manually
          and ask user whether he want to trust certificat if we fail to validate it. */
         NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain: (id)kCFBooleanFalse};

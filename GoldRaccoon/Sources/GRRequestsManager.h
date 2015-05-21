@@ -35,7 +35,7 @@
 @property (nonatomic, weak) id<GRRequestsManagerDelegate> delegate;
 
 /** Whether client expects to have SSL/TLS connection. If set to YES, non-SSL connection will be closed. */
-@property (nonatomic, assign) BOOL implicitTLS;
+@property (nonatomic, assign) BOOL implicitSSL;
 
 /**
  @brief Initialize a GRRequestsManager object with given hostname, username and password.

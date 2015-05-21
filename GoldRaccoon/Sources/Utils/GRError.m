@@ -85,7 +85,7 @@ NSString *GRErrorDomain = @"GRErrorDomain";
             break;
             
         case kGRFTPClientStreamTimedOut:
-            errorMessage = @"Stream timed out with no response from server.";
+            errorMessage = @"Connection timed out with no response from server.";
             break;
             
         case kGRFTPClientCantDeleteFileOrDirectory:

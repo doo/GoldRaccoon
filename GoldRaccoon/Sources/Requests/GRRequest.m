@@ -35,7 +35,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
     self = [super init];
     if (self) {
 		_passiveMode = YES;
-        _implicitTLS = NO;
+        _implicitSSL = NO;
         _uuid = [[NSUUID UUID] UUIDString];
         _path = nil;
         _streamInfo = [[GRStreamInfo alloc] init];
@@ -164,7 +164,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent {
     
-    if (self.serverTrustDelegate != nil &&
+    if (self.serverTrustDelegate != nil && self.implicitSSL &&
         (streamEvent == NSStreamEventHasBytesAvailable || streamEvent == NSStreamEventHasSpaceAvailable)) {
         /* Check it. */
         SecTrustRef trust = (__bridge SecTrustRef)[theStream propertyForKey:
