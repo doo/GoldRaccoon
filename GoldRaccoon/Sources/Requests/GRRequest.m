@@ -42,6 +42,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
         _delegate = aDelegate;
         _dataSource = aDatasource;
         _queue = dispatch_get_main_queue();
+        _encoding = NSUTF8StringEncoding;
     }
     return self;
 }

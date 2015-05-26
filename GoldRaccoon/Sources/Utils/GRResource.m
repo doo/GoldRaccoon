@@ -7,7 +7,6 @@
 //
 
 #import "GRResource.h"
-#import "sys/dirent.h"
 
 @interface GRResource()
 
@@ -23,14 +22,6 @@
         _resourceInfo = dictionary;
     }
     return self;
-}
-
-- (NSString *)name {
-    return self.resourceInfo[(id)kCFFTPResourceName];
-}
-
-- (BOOL)isDirectory {
-    return [self.resourceInfo[(id)kCFFTPResourceType] intValue] == DT_DIR;
 }
 
 @end

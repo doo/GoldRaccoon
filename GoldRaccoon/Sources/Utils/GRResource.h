@@ -11,11 +11,11 @@
 /** The resource info. */
 @interface GRResource : NSObject
 
-/** Returns kCFFTPResourceName from resource info. */
-@property(nonatomic, readonly) NSString *name;
+/** The resource name. */
+@property(nonatomic, strong) NSString *name;
 
-/** Returns whether kCFFTPResourceType == DT_DIR, or not. */
-@property(nonatomic, readonly) BOOL isDirectory;
+/** Whether resource is directory or not. */
+@property(nonatomic, assign) BOOL isDirectory;
 
 /** The resource info. */
 @property(nonatomic, readonly) NSDictionary *resourceInfo;

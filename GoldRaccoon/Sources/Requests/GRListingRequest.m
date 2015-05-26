@@ -15,6 +15,7 @@
 
 #import "GRListingRequest.h"
 #import "GRResource.h"
+#import "sys/dirent.h"
 
 @interface GRListingRequest ()
 
@@ -111,9 +112,19 @@
                 parsedBytes = CFFTPCreateParsedResourceListing(NULL, &bytes[offset], totalbytes - offset, &listingEntity);
                 if (parsedBytes > 0) {
                     if (listingEntity != NULL) {
-                        GRResource *resource = [[GRResource alloc] initWithResourceDictionary:
-                                                (__bridge_transfer NSDictionary *)listingEntity];
+                        NSDictionary *dictionary = (__bridge_transfer NSDictionary *)listingEntity;
+                        GRResource *resource = [[GRResource alloc] initWithResourceDictionary:dictionary];
                         self.filesInfo = [self.filesInfo arrayByAddingObject:resource];
+                        resource.isDirectory = [dictionary[(id)kCFFTPResourceType] intValue] == DT_DIR;
+                        
+                        // CFFTPCreateParsedResourceListing assumes that the names are in MacRoman.
+                        // To fix it we create data from string and read it with correct encoding.
+                        // https://devforums.apple.com/message/155626#155626
+                        resource.name = dictionary[(id)kCFFTPResourceName];
+                        if (self.encoding != NSMacOSRomanStringEncoding) {
+                            NSData *nameData = [resource.name dataUsingEncoding:NSMacOSRomanStringEncoding];
+                            resource.name = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
+                        }
                     }
                     offset += parsedBytes;
                 }

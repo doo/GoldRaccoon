@@ -35,6 +35,9 @@
 
 @property (nonatomic, assign) BOOL implicitSSL;
 
+/** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
+@property (nonatomic, assign) NSStringEncoding encoding;
+
 /** If set, the delegate is be responsible for validating SSL server trust. Should be set before starting request. */
 @property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
 

@@ -63,6 +63,7 @@
         _isRunning = NO;
         _delegateRespondsToPercentProgress = NO;
         _streamQueue = dispatch_queue_create("net.goldenraccoon.streamqueue", NULL);
+        _encoding = NSUTF8StringEncoding;
     }
     return self;
 }
@@ -286,6 +287,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
         [request setServerTrustDelegate:self];
     }
+    [request setEncoding:self.encoding];
     [self _enqueueRequest:request];
     return request;
 }
@@ -299,6 +301,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
         [request setServerTrustDelegate:self];
     }
+    [request setEncoding:self.encoding];
     [self _enqueueRequest:request];
     return request;
 }

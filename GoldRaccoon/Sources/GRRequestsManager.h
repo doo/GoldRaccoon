@@ -37,6 +37,9 @@
 /** Whether client expects to have SSL/TLS connection. If set to YES, non-SSL connection will be closed. */
 @property (nonatomic, assign) BOOL implicitSSL;
 
+/** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
+@property (nonatomic, assign) NSStringEncoding encoding;
+
 /**
  @brief Initialize a GRRequestsManager object with given hostname, username and password.
  @param hostname The hostname of the FTP service to connect to.
