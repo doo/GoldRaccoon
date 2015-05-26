@@ -37,8 +37,8 @@
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
         request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
-        [request.delegate requestFailed:request];
         [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
         return;
     }
     
@@ -69,8 +69,8 @@
     
     if (self.readStream == nil) {
         request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.delegate requestFailed:request];
         [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
         return;
     }
     
@@ -81,8 +81,8 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && request.error == nil) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
-            [request.delegate requestFailed:request];
             [request.streamInfo close:request];
+            [request.delegate requestFailed:request];
         }
     });
 }
@@ -91,8 +91,8 @@
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
         request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
-        [request.delegate requestFailed:request];
         [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
         return;
     }
     
@@ -121,8 +121,8 @@
     
     if (!self.writeStream) {
         request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.delegate requestFailed:request];
         [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
         return;
     }
     
@@ -133,8 +133,8 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && (request.error == nil)) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
-            [request.delegate requestFailed:request];
             [request.streamInfo close:request];
+            [request.delegate requestFailed:request];
         }
     });
 }
@@ -145,12 +145,11 @@
         return NO;
     }
     
+    [request.streamInfo close:request];
     // see if we don't want to call the delegate (set and forget)
     if (!self.cancelDoesNotCallDelegate) {
         [request.delegate requestCompleted:request];
     }
-    
-    [request.streamInfo close:request];
     
     return YES;
 }
@@ -212,15 +211,15 @@
 
 - (void)streamError:(GRRequest *)request error:(NSError *)error
 {
+    [request.streamInfo close:request];
     request.error = [GRError proccessError:error];
     [request.delegate requestFailed:request];
-    [request.streamInfo close:request];
 }
 
 - (void)streamComplete:(GRRequest *)request
 {
-    [request.delegate requestCompleted:request];
     [request.streamInfo close:request];
+    [request.delegate requestCompleted:request];
 }
 
 - (void)close:(GRRequest *)request
