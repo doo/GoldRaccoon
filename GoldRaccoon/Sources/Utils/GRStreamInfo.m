@@ -79,7 +79,6 @@
     }
     
     self.readStream.delegate = request;
-	[self.readStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 	[self.readStream open];
     
     request.didOpenStream = NO;
@@ -232,13 +231,11 @@
 {
     if (self.readStream) {
         [self.readStream close];
-        [self.readStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         self.readStream = nil;
     }
     
     if (self.writeStream) {
         [self.writeStream close];
-        [self.writeStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
         self.writeStream = nil;
     }
     
