@@ -8,20 +8,8 @@
 
 #import "GRResource.h"
 
-@interface GRResource()
-
-@property(nonatomic, strong) NSDictionary *resourceInfo;
-
-@end
 
 @implementation GRResource
 
--(instancetype)initWithResourceDictionary:(NSDictionary *)dictionary {
-    self = [super init];
-    if (self) {
-        _resourceInfo = dictionary;
-    }
-    return self;
-}
 
 @end

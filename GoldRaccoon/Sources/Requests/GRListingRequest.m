@@ -1,4 +1,4 @@
-//
+    //
 //  GRListingRequest.m
 //  GoldRaccoon
 //  v1.0.1
@@ -113,23 +113,13 @@
                 if (parsedBytes > 0) {
                     if (listingEntity != NULL) {
                         NSDictionary *dictionary = (__bridge_transfer NSDictionary *)listingEntity;
-                        GRResource *resource = [[GRResource alloc] initWithResourceDictionary:dictionary];
+                        GRResource *resource = [self resourceFromDictionary:dictionary];
                         self.filesInfo = [self.filesInfo arrayByAddingObject:resource];
-                        resource.isDirectory = [dictionary[(id)kCFFTPResourceType] intValue] == DT_DIR;
-                        
-                        // CFFTPCreateParsedResourceListing assumes that the names are in MacRoman.
-                        // To fix it we create data from string and read it with correct encoding.
-                        // https://devforums.apple.com/message/155626#155626
-                        resource.name = dictionary[(id)kCFFTPResourceName];
-                        if (self.encoding != NSMacOSRomanStringEncoding) {
-                            NSData *nameData = [resource.name dataUsingEncoding:NSMacOSRomanStringEncoding];
-                            resource.name = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
-                        }
                     }
                     offset += parsedBytes;
                 }
             } while (parsedBytes > 0);
-            
+            NSLog(@"\n%s", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
             [self.streamInfo streamComplete:self];
             break;
         }
@@ -137,6 +127,27 @@
         default:
             break;
     }
+}
+
+- (GRResource *)resourceFromDictionary:(NSDictionary *) dictionary {
+    GRResource *resource = [[GRResource alloc] init];
+    resource.isDirectory = [dictionary[(id)kCFFTPResourceType] intValue] == DT_DIR;
+    resource.type = (NSNumber *)dictionary[(id)kCFFTPResourceType];
+    resource.size = (NSNumber *)dictionary[(id)kCFFTPResourceSize];
+    resource.link = (NSString *)dictionary[(id)kCFFTPResourceLink];
+    resource.group = (NSString *)dictionary[(id)kCFFTPResourceGroup];
+    resource.owner = (NSString *)dictionary[(id)kCFFTPResourceOwner];
+    resource.permissions = (NSNumber *)dictionary[(id)kCFFTPResourceMode];
+    
+    // CFFTPCreateParsedResourceListing assumes that the names are in MacRoman.
+    // To fix it we create data from string and read it with correct encoding.
+    // https://devforums.apple.com/message/155626#155626
+    resource.name = dictionary[(id)kCFFTPResourceName];
+    if (self.encoding != NSMacOSRomanStringEncoding) {
+        NSData *nameData = [resource.name dataUsingEncoding:NSMacOSRomanStringEncoding];
+        resource.name = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
+    }
+    return resource;
 }
 
 @end
