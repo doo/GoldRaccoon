@@ -43,6 +43,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
         _dataSource = aDatasource;
         _queue = dispatch_get_main_queue();
         _encoding = NSUTF8StringEncoding;
+        _attemptPersistentConnection = NO;
     }
     return self;
 }
@@ -189,9 +190,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
             }
             dispatch_group_wait(dispatchGroup, DISPATCH_TIME_FOREVER);
             if (!trusted) {
-                [self cancelRequest];
-                [theStream setDelegate: nil];
-                [theStream close];
+                [self.streamInfo streamComplete:self];
             }
         }
     }

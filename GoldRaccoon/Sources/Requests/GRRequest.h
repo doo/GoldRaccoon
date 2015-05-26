@@ -46,6 +46,9 @@
 /** The queue for input/output streams. Default is the main queue. */
 @property (nonatomic, strong) dispatch_queue_t queue;
 
+/** Whether request should try to perisist connection or not. Defaults to NO. */
+@property (nonatomic, assign) BOOL attemptPersistentConnection;
+
 - (instancetype)initWithDelegate:(id<GRRequestDelegate>)aDelegate datasource:(id<GRRequestDataSource>)aDatasource;
 
 /** 

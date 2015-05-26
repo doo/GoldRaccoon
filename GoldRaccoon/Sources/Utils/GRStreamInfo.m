@@ -48,10 +48,12 @@
     
     // a little bit of C because I was not able to make NSInputStream play nice
     CFReadStreamRef readStreamRef = CFReadStreamCreateWithFTPURL(NULL, ( __bridge CFURLRef) request.fullURL);
-    CFReadStreamSetProperty(readStreamRef,
-                            kCFStreamPropertyFTPAttemptPersistentConnection,
-                            kCFBooleanFalse);
-    
+    if (!request.attemptPersistentConnection) {
+        CFReadStreamSetProperty(readStreamRef,
+                                kCFStreamPropertyFTPAttemptPersistentConnection,
+                                kCFBooleanFalse);
+    }
+   
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
 	CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPUsePassiveMode, request.passiveMode ? kCFBooleanTrue :kCFBooleanFalse);
     CFReadStreamSetProperty(readStreamRef, kCFStreamPropertyFTPFetchResourceInfo, kCFBooleanTrue);
@@ -100,9 +102,11 @@
     }
     
     CFWriteStreamRef writeStreamRef = CFWriteStreamCreateWithFTPURL(NULL, ( __bridge CFURLRef) request.fullURL);
-    CFWriteStreamSetProperty(writeStreamRef,
-                             kCFStreamPropertyFTPAttemptPersistentConnection,
-                             kCFBooleanFalse);
+    if (!request.attemptPersistentConnection) {
+        CFWriteStreamSetProperty(writeStreamRef,
+                                 kCFStreamPropertyFTPAttemptPersistentConnection,
+                                 kCFBooleanFalse);
+    }
     
     CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
 	CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertyFTPUsePassiveMode, request.passiveMode ? kCFBooleanTrue :kCFBooleanFalse);

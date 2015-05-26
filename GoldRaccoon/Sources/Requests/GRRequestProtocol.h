@@ -41,8 +41,11 @@
 /** If set, the delegate is be responsible for validating SSL server trust. Should be set before starting request. */
 @property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
 
-/** The queue for input/output streams. Default is the main queue. */
+/** The queue for input/output streams.*/
 @property (nonatomic, strong) dispatch_queue_t queue;
+
+/** Whether request should try to perisist connection or not. */
+@property (nonatomic, assign) BOOL attemptPersistentConnection;
 
 - (NSURL *)fullURL;
 - (NSURL *)fullURLWithEscape;

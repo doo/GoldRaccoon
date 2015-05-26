@@ -40,6 +40,9 @@
 /** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
 @property (nonatomic, assign) NSStringEncoding encoding;
 
+/** Whether request should try to perisist connection or not. Defaults to NO. */
+@property (nonatomic, assign) BOOL attemptPersistentConnection;
+
 /**
  @brief Initialize a GRRequestsManager object with given hostname, username and password.
  @param hostname The hostname of the FTP service to connect to.
