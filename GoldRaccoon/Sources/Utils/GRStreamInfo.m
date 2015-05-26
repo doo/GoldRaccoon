@@ -16,9 +16,6 @@
 #import "GRRequest.h"
 
 @implementation GRStreamInfo
-{
-    dispatch_queue_t _queue;
-}
 
 - (instancetype)init
 {
@@ -31,7 +28,6 @@
         _timeout = 30;
         _cancelRequestFlag = NO;
         _cancelDoesNotCallDelegate = NO;
-        _queue = dispatch_queue_create("com.albertodebortoli.goldraccoon.streaminfo", DISPATCH_QUEUE_CONCURRENT);
     }
     
     return self;
@@ -82,7 +78,7 @@
 	[self.readStream open];
     
     request.didOpenStream = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), _queue, ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && request.error == nil) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
             [request.delegate requestFailed:request];
@@ -134,7 +130,7 @@
     [self.writeStream open];
     
     request.didOpenStream = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), _queue, ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && (request.error == nil)) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
             [request.delegate requestFailed:request];
