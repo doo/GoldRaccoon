@@ -119,7 +119,6 @@
                     offset += parsedBytes;
                 }
             } while (parsedBytes > 0);
-            NSLog(@"\n%s", [[NSString alloc] initWithData:self.receivedData encoding:NSUTF8StringEncoding]);
             [self.streamInfo streamComplete:self];
             break;
         }
