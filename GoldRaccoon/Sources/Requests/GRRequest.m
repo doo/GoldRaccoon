@@ -190,11 +190,11 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
             }
             dispatch_group_wait(dispatchGroup, DISPATCH_TIME_FOREVER);
             if (!trusted) {
-                [self.streamInfo streamComplete:self];
+                [self.streamInfo streamError:self error:nil];
             }
         } else {
             // NO SSL certificate. Close connection.
-            [self.streamInfo streamComplete:self];
+            [self.streamInfo streamError:self error:nil];
         }
     }
 }
