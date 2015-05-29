@@ -59,8 +59,8 @@
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFReadStreamSetDispatchQueue(readStreamRef, queue);
     
-    if (request.implicitSSL) {
-        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(request.serverTrustDelegate == nil)};
+    if (request.manualSSLCertificateValidation) {
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(NO)};
         CFReadStreamSetProperty(readStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
     }
 
@@ -112,8 +112,8 @@
     dispatch_queue_t queue = (request.queue == nil) ? dispatch_get_main_queue() : request.queue;
     CFWriteStreamSetDispatchQueue(writeStreamRef, queue);
     
-    if (request.implicitSSL) {
-        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(request.serverTrustDelegate == nil)};
+    if (request.manualSSLCertificateValidation) {
+        NSDictionary *sslSettings = @{(id)kCFStreamSSLValidatesCertificateChain:@(NO)};
         CFWriteStreamSetProperty(writeStreamRef, kCFStreamPropertySSLSettings, (__bridge CFDictionaryRef) sslSettings);
     }
 

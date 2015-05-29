@@ -73,7 +73,7 @@
 /**
  @brief Called to ask deleget whether we should trust given server trust or not.
  If it's not implemented the default evaluation will be performed.
- This method is only called when `implicitSSL` property is set to YES.
+ This method is only called when `manualSSLCertificateValidation` property is set to YES.
  */
 - (void)requestsManager:(id<GRRequestsManagerProtocol>)requestsManager
     shouldContinueWithServerTrust:(SecTrustRef)serverTrust

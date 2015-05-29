@@ -33,7 +33,7 @@
 @property (nonatomic, assign) float maximumSize;
 @property (nonatomic, assign) float percentCompleted;
 
-@property (nonatomic, assign) BOOL implicitSSL;
+@property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
 /** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
 @property (nonatomic, assign) NSStringEncoding encoding;

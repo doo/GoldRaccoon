@@ -29,7 +29,7 @@
 @property (nonatomic, weak) id <GRRequestDelegate> delegate;
 
 /** If set, the delegate is be responsible for validating SSL server trust. 
- Should be set before starting request. The delegate will only be called when `implicitSSL` set to YES. */
+ Should be set before starting request. The delegate will only be called when `manualSSLCertificateValidation` set to YES. */
 @property (nonatomic, weak) id <GRRequesSSLServerTrustDelegate> serverTrustDelegate;
 
 @property (nonatomic, weak) id <GRRequestDataSource> dataSource;
@@ -38,7 +38,7 @@
 @property (nonatomic, readonly) long totalBytesSent;            // will have bytes total sent
 @property (nonatomic, assign) BOOL didOpenStream;               // whether the stream opened or not
 @property (nonatomic, assign) BOOL cancelDoesNotCallDelegate;   // cancel closes stream without calling delegate
-@property (nonatomic, assign) BOOL implicitSSL;
+@property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
 /** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
 @property (nonatomic, assign) NSStringEncoding encoding;

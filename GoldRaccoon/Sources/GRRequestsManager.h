@@ -35,7 +35,7 @@
 @property (nonatomic, weak) id<GRRequestsManagerDelegate> delegate;
 
 /** Whether client expects to have SSL/TLS connection. If set to YES, non-SSL connection will be closed. */
-@property (nonatomic, assign) BOOL implicitSSL;
+@property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
 /** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
 @property (nonatomic, assign) NSStringEncoding encoding;
