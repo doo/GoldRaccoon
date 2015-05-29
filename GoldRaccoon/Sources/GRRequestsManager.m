@@ -284,7 +284,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     id<GRRequestProtocol> request = [[clazz alloc] initWithDelegate:self datasource:self];
     request.path = filePath;
     [request setQueue:self.streamQueue];
-    [request setmanualSSLCertificateValidation:self.manualSSLCertificateValidation];
+    [request setManualSSLCertificateValidation:self.manualSSLCertificateValidation];
     if ([self.delegate respondsToSelector:@selector(requestsManager:shouldContinueWithServerTrust:completionHandler:)]) {
         [request setServerTrustDelegate:self];
     }
