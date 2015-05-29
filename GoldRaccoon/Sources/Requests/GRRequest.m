@@ -192,6 +192,9 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
             if (!trusted) {
                 [self.streamInfo streamComplete:self];
             }
+        } else {
+            // NO SSL certificate. Close connection.
+            [self.streamInfo streamComplete:self];
         }
     }
 }
