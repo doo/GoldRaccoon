@@ -88,10 +88,12 @@
 
 - (void)startProcessingRequests
 {
-    if (_isRunning == NO) {
-        _isRunning = YES;
-        [self _processNextRequest];
-    }
+    dispatch_async(self.streamQueue, ^{
+        if (!_isRunning) {
+            _isRunning = YES;
+            [self _processNextRequest];
+        }
+    });
 }
 
 - (void)stopAndCancelAllRequests
@@ -311,7 +313,9 @@ completionHandler:(void (^)(BOOL))completionHandler {
 
 - (void)_enqueueRequest:(id<GRRequestProtocol>)request
 {
-    [self.requestQueue enqueue:request];
+    dispatch_async(self.streamQueue, ^{
+        [self.requestQueue enqueue:request];
+    });
 }
 
 - (void)_processNextRequest
