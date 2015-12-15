@@ -44,6 +44,13 @@
     
     // a little bit of C because I was not able to make NSInputStream play nice
     CFReadStreamRef readStreamRef = CFReadStreamCreateWithFTPURL(NULL, ( __bridge CFURLRef) request.fullURL);
+    if (readStreamRef == NULL) {
+        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
+        [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
+        return;
+    }
+    
     if (!request.attemptPersistentConnection) {
         CFReadStreamSetProperty(readStreamRef,
                                 kCFStreamPropertyFTPAttemptPersistentConnection,
@@ -66,13 +73,6 @@
 
     
     self.readStream = ( __bridge_transfer NSInputStream *) readStreamRef;
-    
-    if (self.readStream == nil) {
-        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.streamInfo close:request];
-        [request.delegate requestFailed:request];
-        return;
-    }
     
     self.readStream.delegate = request;
 	[self.readStream open];
@@ -97,6 +97,14 @@
     }
     
     CFWriteStreamRef writeStreamRef = CFWriteStreamCreateWithFTPURL(NULL, ( __bridge CFURLRef) request.fullURL);
+    
+    if (writeStreamRef == NULL) {
+        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
+        [request.streamInfo close:request];
+        [request.delegate requestFailed:request];
+        return;
+    }
+    
     if (!request.attemptPersistentConnection) {
         CFWriteStreamSetProperty(writeStreamRef,
                                  kCFStreamPropertyFTPAttemptPersistentConnection,
@@ -118,13 +126,6 @@
     }
 
     self.writeStream = ( __bridge_transfer NSOutputStream *) writeStreamRef;
-    
-    if (!self.writeStream) {
-        request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.streamInfo close:request];
-        [request.delegate requestFailed:request];
-        return;
-    }
     
     self.writeStream.delegate = request;
     [self.writeStream open];
