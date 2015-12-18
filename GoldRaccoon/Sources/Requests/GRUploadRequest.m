@@ -28,7 +28,6 @@
 @implementation GRUploadRequest
 
 @synthesize localFilePath = _localFilePath;
-@synthesize fullRemotePath = _fullRemotePath;
 
 - (void)start
 {

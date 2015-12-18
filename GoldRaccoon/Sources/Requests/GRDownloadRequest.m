@@ -24,7 +24,6 @@
 @implementation GRDownloadRequest
 
 @synthesize localFilePath = _localFilePath;
-@synthesize fullRemotePath = _fullRemotePath;
 
 - (void)start
 {
