@@ -37,8 +37,10 @@
 /** Whether client expects to have SSL/TLS connection. If set to YES, non-SSL connection will be closed. */
 @property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
-/** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
-@property (nonatomic, assign) NSStringEncoding encoding;
+/** The encoding used for resource names. 
+ See CFStringEncodings and CFStringBuiltInEncodings.
+ Defaults to kCFStringEncodingUTF8. */
+@property (nonatomic, assign) CFStringEncoding encoding;
 
 /** Whether request should try to perisist connection or not. Defaults to NO. */
 @property (nonatomic, assign) BOOL attemptPersistentConnection;

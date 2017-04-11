@@ -42,7 +42,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
         _delegate = aDelegate;
         _dataSource = aDatasource;
         _queue = dispatch_get_main_queue();
-        _encoding = NSUTF8StringEncoding;
+        _encoding = kCFStringEncodingUTF8;
         _attemptPersistentConnection = NO;
     }
     return self;
@@ -115,14 +115,12 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
 
 - (NSString *)encodeString:(NSString *)string;
 {
-    NSString *urlEncoded = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                                                 NULL,
-                                                                                                 (__bridge CFStringRef) string,
-                                                                                                 NULL,
-                                                                                                 (CFStringRef)@"!*'\"();:@&=+$,?%#[]% ",
-                                                                                                 kCFStringEncodingUTF8);
+    NSString *urlEncoded = (__bridge_transfer NSString *)
+    CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef) string,
+                                            NULL, (CFStringRef)@"!*'\"();:@&=+$,?%#[]% ",
+                                            self.encoding);
     return urlEncoded;
-}  
+}
 
 - (void)start
 {

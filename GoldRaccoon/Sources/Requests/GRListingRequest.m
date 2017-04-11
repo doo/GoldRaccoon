@@ -142,9 +142,15 @@
     // To fix it we create data from string and read it with correct encoding.
     // https://devforums.apple.com/message/155626#155626
     resource.name = dictionary[(id)kCFFTPResourceName];
+
     if (self.encoding != NSMacOSRomanStringEncoding) {
         NSData *nameData = [resource.name dataUsingEncoding:NSMacOSRomanStringEncoding];
-        resource.name = [[NSString alloc] initWithData:nameData encoding:NSUTF8StringEncoding];
+        NSString *name  = [[NSString alloc]
+                           initWithData:nameData
+                           encoding:CFStringConvertEncodingToNSStringEncoding(self.encoding)];
+        if (name != nil) {
+            resource.name = name;
+        }
     }
     return resource;
 }

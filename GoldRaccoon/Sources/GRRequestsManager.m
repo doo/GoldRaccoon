@@ -63,7 +63,7 @@
         _isRunning = NO;
         _delegateRespondsToPercentProgress = NO;
         _streamQueue = dispatch_queue_create("net.goldenraccoon.streamqueue", NULL);
-        _encoding = NSUTF8StringEncoding;
+        _encoding = kCFStringEncodingUTF8;
         _attemptPersistentConnection = NO;
     }
     return self;

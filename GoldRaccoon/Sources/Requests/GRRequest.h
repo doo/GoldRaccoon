@@ -40,8 +40,11 @@
 @property (nonatomic, assign) BOOL cancelDoesNotCallDelegate;   // cancel closes stream without calling delegate
 @property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
-/** The encoding used for resource names. Defaults to NSUTF8StringEncoding */
-@property (nonatomic, assign) NSStringEncoding encoding;
+/** The encoding used for resource names.
+ See CFStringEncodings and CFStringBuiltInEncodings.
+ Defaults to kCFStringEncodingUTF8. */
+@property (nonatomic, assign) CFStringEncoding encoding;
+
 
 /** The queue for input/output streams. Default is the main queue. */
 @property (nonatomic, strong) dispatch_queue_t queue;
