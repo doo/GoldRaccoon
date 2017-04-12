@@ -109,7 +109,10 @@
             
             do {
                 CFDictionaryRef listingEntity = NULL;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 parsedBytes = CFFTPCreateParsedResourceListing(NULL, &bytes[offset], totalbytes - offset, &listingEntity);
+#pragma clang diagnostic pop
                 if (parsedBytes > 0) {
                     if (listingEntity != NULL) {
                         NSDictionary *dictionary = (__bridge_transfer NSDictionary *)listingEntity;
@@ -128,6 +131,8 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (GRResource *)resourceFromDictionary:(NSDictionary *) dictionary {
     GRResource *resource = [[GRResource alloc] init];
     resource.isDirectory = [dictionary[(id)kCFFTPResourceType] intValue] == DT_DIR;
@@ -154,5 +159,7 @@
     }
     return resource;
 }
-
+#pragma clang diagnostic pop
 @end
+
+

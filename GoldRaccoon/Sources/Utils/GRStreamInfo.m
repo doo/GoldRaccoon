@@ -33,6 +33,9 @@
     return self;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)openRead:(GRRequest *)request
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
@@ -139,6 +142,8 @@
         }
     });
 }
+
+#pragma clang diagnostic pop
 
 - (BOOL)checkCancelRequest:(GRRequest *)request
 {

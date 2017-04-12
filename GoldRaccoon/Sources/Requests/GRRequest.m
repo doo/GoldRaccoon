@@ -113,6 +113,8 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
     _path = directoryPathLocal;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)encodeString:(NSString *)string;
 {
     NSString *urlEncoded = (__bridge_transfer NSString *)
@@ -121,6 +123,7 @@ NSString *kCertificateAlreadyValidated = @"kCertificateAlreadyValidated";
                                             self.encoding);
     return urlEncoded;
 }
+#pragma clang diagnostic pop
 
 - (void)start
 {

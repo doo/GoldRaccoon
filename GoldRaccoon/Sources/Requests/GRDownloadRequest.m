@@ -48,7 +48,10 @@
     
     switch (streamEvent) {
         case NSStreamEventOpenCompleted: {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             self.maximumSize = [[theStream propertyForKey:(id)kCFStreamPropertyFTPResourceSize] integerValue];
+#pragma clang diagnostic pop
             self.didOpenStream = YES;
             self.streamInfo.bytesTotal = 0;
             self.receivedData = [NSMutableData data];
