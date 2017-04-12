@@ -40,6 +40,8 @@
 @property (nonatomic, assign) BOOL cancelDoesNotCallDelegate;   // cancel closes stream without calling delegate
 @property (nonatomic, assign) BOOL manualSSLCertificateValidation;
 
+@property (nonatomic, assign) BOOL passiveMode;
+
 /** The encoding used for resource names.
  See CFStringEncodings and CFStringBuiltInEncodings.
  Defaults to kCFStringEncodingUTF8. */

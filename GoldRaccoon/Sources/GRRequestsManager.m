@@ -61,6 +61,7 @@
         _password = password;
         _requestQueue = [[GRQueue alloc] init];
         _isRunning = NO;
+        _passiveMode = YES;
         _delegateRespondsToPercentProgress = NO;
         _streamQueue = dispatch_queue_create("net.goldenraccoon.streamqueue", NULL);
         _encoding = kCFStringEncodingUTF8;
@@ -292,6 +293,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     }
     [request setAttemptPersistentConnection:self.attemptPersistentConnection];
     [request setEncoding:self.encoding];
+    [request setPassiveMode:self.password];
     [self _enqueueRequest:request];
     return request;
 }
@@ -307,6 +309,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     }
     [request setAttemptPersistentConnection:self.attemptPersistentConnection];
     [request setEncoding:self.encoding];
+    [request setPassiveMode:self.password];
     [self _enqueueRequest:request];
     return request;
 }

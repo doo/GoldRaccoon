@@ -42,6 +42,8 @@
  Defaults to kCFStringEncodingUTF8. */
 @property (nonatomic, assign) CFStringEncoding encoding;
 
+@property (nonatomic, assign) BOOL passiveMode;
+
 /** Whether request should try to perisist connection or not. Defaults to NO. */
 @property (nonatomic, assign) BOOL attemptPersistentConnection;
 
