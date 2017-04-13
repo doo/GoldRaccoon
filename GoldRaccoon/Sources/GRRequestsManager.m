@@ -293,7 +293,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     }
     [request setAttemptPersistentConnection:self.attemptPersistentConnection];
     [request setEncoding:self.encoding];
-    [request setPassiveMode:self.password];
+    [request setPassiveMode:self.passiveMode];
     [self _enqueueRequest:request];
     return request;
 }
@@ -309,7 +309,7 @@ completionHandler:(void (^)(BOOL))completionHandler {
     }
     [request setAttemptPersistentConnection:self.attemptPersistentConnection];
     [request setEncoding:self.encoding];
-    [request setPassiveMode:self.password];
+    [request setPassiveMode:self.passiveMode];
     [self _enqueueRequest:request];
     return request;
 }
