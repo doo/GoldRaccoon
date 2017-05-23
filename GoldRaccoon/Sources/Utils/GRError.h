@@ -11,6 +11,7 @@
 //  Modified and redesigned by Alberto De Bortoli.
 //  Copyright 2013 Alberto De Bortoli. All rights reserved.
 //
+#import <Foundation/Foundation.h>
 
 extern NSString *GRErrorDomain;
 
