@@ -22,7 +22,7 @@ NSString *GRErrorDomain = @"GRErrorDomain";
 {
     // As suggested by RMaddy
     NSNumber *code = [error.userInfo objectForKey:(id)kCFFTPStatusCodeKey];
-    if (code) {
+    if (code != nil) {
         return [code intValue];
     }
     return 0;
