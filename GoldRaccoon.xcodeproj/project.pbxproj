@@ -397,6 +397,9 @@
 						CreatedOnToolsVersion = 10.1;
 						ProvisioningStyle = Manual;
 					};
+					D3622DE9177F3357009DEEEB = {
+						ProvisioningStyle = Manual;
+					};
 				};
 			};
 			buildConfigurationList = D3622DE5177F3357009DEEEB /* Build configuration list for PBXProject "GoldRaccoon" */;
@@ -754,11 +757,14 @@
 		D3622E1D177F3357009DEEEB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GoldRaccoon/GoldRaccoon-Prefix.pch";
 				INFOPLIST_FILE = "GoldRaccoon/GoldRaccoon-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.albertodebortoli.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -766,11 +772,14 @@
 		D3622E1E177F3357009DEEEB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GoldRaccoon/GoldRaccoon-Prefix.pch";
 				INFOPLIST_FILE = "GoldRaccoon/GoldRaccoon-Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.albertodebortoli.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
