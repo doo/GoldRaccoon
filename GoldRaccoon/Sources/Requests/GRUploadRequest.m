@@ -79,12 +79,13 @@
 
 - (void)requestFailed:(GRRequest *)request
 {
-    [self.delegate requestFailed:request];
+    self.error = request.error;
+    [self.delegate requestFailed:self];
 }
 
 - (BOOL)shouldOverwriteFile:(NSString *)filePath forRequest:(id<GRDataExchangeRequestProtocol>)request
 {
-    return [self.delegate shouldOverwriteFile:filePath forRequest:request];
+    return [self.delegate shouldOverwriteFile:filePath forRequest:self];
 }
 
 #pragma mark - GRRequestDataSource

@@ -231,7 +231,7 @@
 - (void)close:(GRRequest *)request
 {
     if (self.readStream) {
-        [self.readStream close];
+//        [self.readStream close];
         self.readStream = nil;
     }
     
