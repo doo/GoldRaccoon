@@ -90,8 +90,8 @@
 - (void)startProcessingRequests
 {
     dispatch_async(self.streamQueue, ^{
-        if (!_isRunning) {
-            _isRunning = YES;
+        if (!self->_isRunning) {
+            self->_isRunning = YES;
             [self _processNextRequest];
         }
     });
