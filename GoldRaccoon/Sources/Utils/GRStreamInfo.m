@@ -217,29 +217,29 @@
 
 - (void)streamError:(GRRequest *)request error:(NSError *)error
 {
-    [request.streamInfo close:request];
+    [request.streamInfo close:request closeStream:NO];
     request.error = [GRError proccessError:error];
     [request.delegate requestFailed:request];
 }
 
 - (void)streamComplete:(GRRequest *)request
 {
-    [request.streamInfo close:request];
+    [request.streamInfo close:request closeStream:YES];
     [request.delegate requestCompleted:request];
 }
 
-- (void)close:(GRRequest *)request
+- (void)close:(GRRequest *)request closeStream:(BOOL)closeStream
 {
-    if (self.readStream) {
-//        [self.readStream close];
-        self.readStream = nil;
+    if (self.readStream && closeStream) {
+        [self.readStream close];
     }
     
-    if (self.writeStream) {
+    if (self.writeStream && closeStream) {
         [self.writeStream close];
-        self.writeStream = nil;
     }
-    
+    self.readStream = nil;
+    self.writeStream = nil;
+
     request.streamInfo = nil;
 }
 
