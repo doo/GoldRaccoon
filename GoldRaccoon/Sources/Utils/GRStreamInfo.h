@@ -36,6 +36,6 @@
 - (BOOL)write:(id<GRRequestProtocol>)request data:(NSData *)data;
 - (void)streamError:(id<GRRequestProtocol>)request error:(NSError *)error;
 - (void)streamComplete:(id<GRRequestProtocol>)request;
-- (void)close:(id<GRRequestProtocol>)request;
+- (void)close:(id<GRRequestProtocol>)request closeStream:(BOOL)closeStream;
 
 @end

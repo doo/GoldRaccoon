@@ -40,7 +40,7 @@
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
         request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
-        [request.streamInfo close:request];
+        [request.streamInfo close:request closeStream:NO];
         [request.delegate requestFailed:request];
         return;
     }
@@ -49,7 +49,7 @@
     CFReadStreamRef readStreamRef = CFReadStreamCreateWithFTPURL(NULL, ( __bridge CFURLRef) request.fullURL);
     if (readStreamRef == NULL) {
         request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.streamInfo close:request];
+        [request.streamInfo close:request closeStream:NO];
         [request.delegate requestFailed:request];
         return;
     }
@@ -84,7 +84,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && request.error == nil) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
-            [request.streamInfo close:request];
+            [request.streamInfo close:request closeStream:NO];
             [request.delegate requestFailed:request];
         }
     });
@@ -94,7 +94,7 @@
 {
     if ([request.dataSource hostnameForRequest:request] == nil) {
         request.error = [GRError errorWithCode:kGRFTPClientHostnameIsNil];
-        [request.streamInfo close:request];
+        [request.streamInfo close:request closeStream:NO];
         [request.delegate requestFailed:request];
         return;
     }
@@ -103,7 +103,7 @@
     
     if (writeStreamRef == NULL) {
         request.error = [GRError errorWithCode:kGRFTPClientCantOpenStream];
-        [request.streamInfo close:request];
+        [request.streamInfo close:request closeStream:NO];
         [request.delegate requestFailed:request];
         return;
     }
@@ -137,7 +137,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, self.timeout * NSEC_PER_SEC), request.queue, ^{
         if (!request.didOpenStream && (request.error == nil)) {
             request.error = [GRError errorWithCode:kGRFTPClientStreamTimedOut];
-            [request.streamInfo close:request];
+            [request.streamInfo close:request closeStream:NO];
             [request.delegate requestFailed:request];
         }
     });
@@ -151,7 +151,7 @@
         return NO;
     }
     
-    [request.streamInfo close:request];
+    [request.streamInfo close:request closeStream:YES];
     // see if we don't want to call the delegate (set and forget)
     if (!self.cancelDoesNotCallDelegate) {
         [request.delegate requestCompleted:request];
